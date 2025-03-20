@@ -1,0 +1,5 @@
+train: /path/to/dataset/images/train
+val: /path/to/dataset/images/val
+test: /path/to/dataset/images/test
+nc: 6
+names: ["accident", "car", "bike", "truck", "pedestrian", "road"]

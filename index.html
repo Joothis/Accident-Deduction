@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Traffic Monitor - Accident Detection System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-traffic-light"></i>
+            <span>Smart Traffic Monitor</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="active"><i class="fas fa-video"></i> Live Monitoring</a></li>
+            <li><a href="#"><i class="fas fa-history"></i> Incident History</a></li>
+            <li><a href="#"><i class="fas fa-chart-line"></i> Analytics</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+        <div class="user-profile">
+            <span>Admin</span>
+            <img src="{{ url_for('static', filename='img/avatar.png') }}" alt="User Avatar">
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Status Dashboard -->
+        <div class="status-dashboard">
+            <div class="status-card">
+                <i class="fas fa-eye"></i>
+                <div class="status-info">
+                    <h3>Active Cameras</h3>
+                    <p id="active-cameras">4/4</p>
+                </div>
+            </div>
+            <div class="status-card">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="status-info">
+                    <h3>Incidents Today</h3>
+                    <p id="incidents-today">0</p>
+                </div>
+            </div>
+            <div class="status-card">
+                <i class="fas fa-clock"></i>
+                <div class="status-info">
+                    <h3>System Uptime</h3>
+                    <p id="system-uptime">12h 45m</p>
+                </div>
+            </div>
+            <div class="status-card">
+                <i class="fas fa-car-crash"></i>
+                <div class="status-info">
+                    <h3>Detection Status</h3>
+                    <p id="detection-status" class="status-active">Active</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Camera Grid -->
+        <div class="camera-section">
+            <div class="section-header">
+                <h2><i class="fas fa-video"></i> Live Camera Feeds</h2>
+                <div class="controls">
+                    <button id="refresh-feeds"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <select id="layout-selector">
+                        <option value="grid">Grid View</option>
+                        <option value="single">Single View</option>
+                    </select>
+                </div>
+            </div>
+            <div class="camera-grid" id="camera-grid">
+                <div class="camera-card">
+                    <div class="camera-header">
+                        <span class="camera-title">Camera 1 - Main Entrance</span>
+                        <span class="camera-status"><i class="fas fa-circle"></i> Live</span>
+                    </div>
+                    <div class="camera-feed-container">
+                        <video class="camera-feed" id="camera1" autoplay playsinline></video>
+                        <div class="camera-overlay">
+                            <div class="detection-box" style="display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="camera-footer">
+                        <span class="location"><i class="fas fa-map-marker-alt"></i> Highway 101, Mile 42</span>
+                        <button class="btn-expand"><i class="fas fa-expand"></i></button>
+                    </div>
+                </div>
+                
+                <div class="camera-card">
+                    <div class="camera-header">
+                        <span class="camera-title">Camera 2 - Intersection</span>
+                        <span class="camera-status"><i class="fas fa-circle"></i> Live</span>
+                    </div>
+                    <div class="camera-feed-container">
+                        <video class="camera-feed" id="camera2" autoplay playsinline></video>
+                        <div class="camera-overlay">
+                            <div class="detection-box" style="display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="camera-footer">
+                        <span class="location"><i class="fas fa-map-marker-alt"></i> Main St & 5th Ave</span>
+                        <button class="btn-expand"><i class="fas fa-expand"></i></button>
+                    </div>
+                </div>
+                
+                <div class="camera-card">
+                    <div class="camera-header">
+                        <span class="camera-title">Camera 3 - Highway</span>
+                        <span class="camera-status"><i class="fas fa-circle"></i> Live</span>
+                    </div>
+                    <div class="camera-feed-container">
+                        <video class="camera-feed" id="camera3" autoplay playsinline></video>
+                        <div class="camera-overlay">
+                            <div class="detection-box" style="display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="camera-footer">
+                        <span class="location"><i class="fas fa-map-marker-alt"></i> Highway 280, Mile 15</span>
+                        <button class="btn-expand"><i class="fas fa-expand"></i></button>
+                    </div>
+                </div>
+                
+                <div class="camera-card">
+                    <div class="camera-header">
+                        <span class="camera-title">Camera 4 - Bridge</span>
+                        <span class="camera-status"><i class="fas fa-circle"></i> Live</span>
+                    </div>
+                    <div class="camera-feed-container">
+                        <video class="camera-feed" id="camera4" autoplay playsinline></video>
+                        <div class="camera-overlay">
+                            <div class="detection-box" style="display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="camera-footer">
+                        <span class="location"><i class="fas fa-map-marker-alt"></i> Bay Bridge, East Span</span>
+                        <button class="btn-expand"><i class="fas fa-expand"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accident Alerts & Details -->
+        <div class="content-columns">
+            <!-- Accident Alerts -->
+            <div class="alert-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-exclamation-circle"></i> Accident Alerts</h2>
+                    <button id="clear-alerts"><i class="fas fa-trash"></i> Clear All</button>
+                </div>
+                <div class="alert-container" id="alert-container">
+                    <div class="no-alerts-message">
+                        <i class="fas fa-check-circle"></i>
+                        <p>No accidents detected</p>
+                    </div>
+                    <!-- Alerts will be added here dynamically -->
+                </div>
+            </div>
+
+            <!-- Accident Details -->
+            <div class="details-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-info-circle"></i> Incident Details</h2>
+                </div>
+                <div class="details-container" id="details-container">
+                    <div class="no-details-message">
+                        <i class="fas fa-clipboard"></i>
+                        <p>Select an incident to view details</p>
+                    </div>
+                    <!-- Details will be shown here when an alert is selected -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Actions -->
+        <div class="emergency-section">
+            <h2><i class="fas fa-ambulance"></i> Emergency Actions</h2>
+            <div class="emergency-actions">
+                <button class="btn-emergency" id="call-emergency">
+                    <i class="fas fa-phone-alt"></i> Call Emergency Services
+                </button>
+                <button class="btn-notify" id="notify-authorities">
+                    <i class="fas fa-bell"></i> Notify Traffic Authorities
+                </button>
+                <button class="btn-report" id="generate-report">
+                    <i class="fas fa-file-alt"></i> Generate Incident Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for expanded camera view -->
+    <div class="modal" id="camera-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-camera-title">Camera View</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="expanded-camera-container">
+                    <video id="expanded-camera" autoplay playsinline></video>
+                    <div class="camera-overlay">
+                        <div class="detection-box" style="display: none;"></div>
+                    </div>
+                </div>
+                <div class="detection-info">
+                    <div class="info-card">
+                        <h4>License Plate</h4>
+                        <p id="license-plate-text">N/A</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Accident Probability</h4>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="accident-probability" style="width: 0%;">0%</div>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <h4>Vehicle Type</h4>
+                        <p id="vehicle-type">N/A</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-action" id="capture-snapshot">
+                    <i class="fas fa-camera"></i> Capture Snapshot
+                </button>
+                <button class="btn-action" id="toggle-detection">
+                    <i class="fas fa-eye"></i> Toggle Detection
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification toast -->
+    <div class="toast" id="notification-toast">
+        <div class="toast-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="toast-content">
+            <h4 id="toast-title">Accident Detected</h4>
+            <p id="toast-message">Vehicle collision detected on Camera 1</p>
+        </div>
+        <button class="toast-close">&times;</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

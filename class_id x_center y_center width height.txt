@@ -1,0 +1,8 @@
+- car
+- truck
+- motorcycle
+- bicycle
+- pedestrian
+- accident
+- fallen_vehicle
+- human_collision

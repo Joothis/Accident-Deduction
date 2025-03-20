@@ -1,0 +1,8 @@
+opencv-python
+numpy
+torch
+torchvision
+PyYAML
+joblib
+requests
+flask
